@@ -32,7 +32,7 @@ public class DebugScreen implements Screen {
     private Texture img;
     private BitmapFont fontEstrogen;
 
-    //Using the PlayerInterface  to access Player class
+    //Using the PlayerInterface to access Player class
     private PlayerInterface player = Player.getPlayer();
     private ScoreThread scoreThread = new ScoreThread(player);
 
@@ -160,7 +160,7 @@ public class DebugScreen implements Screen {
 
     }
 
-    public void onPlayerHitBad() {
+    private void onPlayerHitBad() {
         player.resetChunkScore();
         player.resetMultiplier();
         hitSFX.play();

@@ -4,8 +4,11 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.martinstephencox.twilightdrift.consts.Consts;
 
 /**
@@ -24,16 +27,36 @@ public class MainMenu implements Screen {
     private Texture scrollingFgTextureSimple = new Texture(Gdx.files.internal(Consts.IMAGE_SCROLLING_MENU_FOREGROUND_1));
     private Texture scrollingFgTextureDecorated = new Texture(Gdx.files.internal(Consts.IMAGE_SCROLLING_MENU_FOREGROUND_2));
 
-    private SpriteBatch batch;
-
     //Need to keep track of the X position for each texture so we can "move" it by changing the X coordinate
     private int scrollingFgTextureSimpleX = 0;
     private int scrollingFgTextureDecoratedX = Consts.MENU_FOREGROUND_WIDTH;    //Needs to be directly to the right of the first FgTexture
     private int scrollingMgTextureFirstX = 0;
     private int scrollingMgTextureSecondX = Consts.MENU_MIDGROUND_WIDTH;        //Needs to be directly to the right of the first MgTexture
 
+    private SpriteBatch batch;
+    private BitmapFont fontEstrogenTitle;
+
     public MainMenu() {
         batch = new SpriteBatch();
+
+        //Load up title font
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Consts.FONT_ESTROGEN));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+        float titleR = 0/255f;
+        float titleG = 151/255f;
+        float titleB = 157/255f;
+
+        parameter.size = 80;
+        parameter.color = new Color(titleR, titleG, titleB, 1);
+        parameter.borderWidth = 2;
+        parameter.borderColor = Color.WHITE;
+        parameter.shadowColor = Color.WHITE;
+        parameter.shadowOffsetX = -4;
+        parameter.shadowOffsetY = 4;
+        parameter.kerning = true;
+        fontEstrogenTitle = generator.generateFont(parameter);
+        generator.dispose();
     }
 
     public void show() {
@@ -54,6 +77,9 @@ public class MainMenu implements Screen {
         batch.draw(scrollingFgTextureSimple, scrollingFgTextureSimpleX, 0);
         batch.draw(scrollingFgTextureDecorated, scrollingFgTextureDecoratedX, 0);
 
+        //Draw the title logo
+        fontEstrogenTitle.draw(batch, "Twilight Drift", 120, 550);
+
         batch.end();
 
         scrollForeground();
@@ -72,7 +98,7 @@ public class MainMenu implements Screen {
      * screen enough that it can no longer be seen, it is moved to the right of the screen to provide an "infinite" scroll
      * effect
      */
-    public void scrollForeground() {
+    private void scrollForeground() {
         //Move textures at constant rate to the left by Consts.MENU_FOREGROUND_SCROLL_RATE pixels per frame
         scrollingFgTextureSimpleX -= Consts.MENU_FOREGROUND_SCROLL_RATE;
         scrollingFgTextureDecoratedX -= Consts.MENU_FOREGROUND_SCROLL_RATE;
@@ -95,7 +121,7 @@ public class MainMenu implements Screen {
      * "infinite" scroll effect (If we only had one, then there would be a 800 pixel gap between the end of the texture moving
      * off the left edge of the screen and the beginning of the texture appearing on the right of the screen).
      */
-    public void scrollMidground() {
+    private void scrollMidground() {
         //Move textures at constant rate to the left by Consts.MENU_MIDGROUND_SCROLL_RATE pixels per frame
         scrollingMgTextureFirstX -= Consts.MENU_MIDGROUND_SCROLL_RATE;
         scrollingMgTextureSecondX -= Consts.MENU_MIDGROUND_SCROLL_RATE;
