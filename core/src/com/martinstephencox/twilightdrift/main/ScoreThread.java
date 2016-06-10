@@ -1,0 +1,50 @@
+package com.martinstephencox.twilightdrift.main;
+
+import com.martinstephencox.twilightdrift.actors.Player;
+import com.martinstephencox.twilightdrift.consts.Consts;
+
+/**
+ * Created by Martin on 01/06/2016.
+ */
+public class ScoreThread implements Runnable {
+
+    private Player player;
+    private int updatePeriod;
+    private volatile boolean isPaused = false;
+
+    public ScoreThread(Player p) {
+        player = p;
+    }
+
+    public void setUpdatePeriod(int up) {
+        updatePeriod = up;
+    }
+
+    @Override
+    public void run() {
+        while(true) {
+            try {
+                if (isPaused) {
+                    //The scoring is needs to be disabled for Consts.PAUSE_VALUE because
+                    //the player hit a bad object
+                    Thread.sleep(Consts.PAUSE_VALUE);
+                    isPaused = false;
+                } else {
+                    //Scoring continues as normal
+                    player.incrementChunkScore();
+                    Thread.sleep(updatePeriod);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Pauses the score system for Consts.PAUSE_VALUE milliseconds
+     */
+    public void pauseScoreThread() {
+        isPaused = true;
+    }
+
+}
