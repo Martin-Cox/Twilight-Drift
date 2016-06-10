@@ -1,18 +1,18 @@
 package com.martinstephencox.twilightdrift.main;
 
-import com.martinstephencox.twilightdrift.actors.Player;
 import com.martinstephencox.twilightdrift.consts.Consts;
+import com.martinstephencox.twilightdrift.interfaces.PlayerInterface;
 
 /**
  * Created by Martin on 01/06/2016.
  */
 public class ScoreThread implements Runnable {
 
-    private Player player;
+    private PlayerInterface player;
     private int updatePeriod;
     private volatile boolean isPaused = false;
 
-    public ScoreThread(Player p) {
+    public ScoreThread(PlayerInterface p) {
         player = p;
     }
 
