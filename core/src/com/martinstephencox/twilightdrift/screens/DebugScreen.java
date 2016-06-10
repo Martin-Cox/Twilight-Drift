@@ -32,13 +32,9 @@ public class DebugScreen implements Screen {
     private Texture img;
     private BitmapFont fontEstrogen;
 
-    //Using direct access to raw Player class
-    private Player player = new Player();
-    private ScoreThread scoreThread = new ScoreThread(player);
-
     //Using the PlayerInterface  to access Player class
-    /*private PlayerInterface player = new Player();
-    private ScoreThread scoreThread = new ScoreThread(player.getPlayer());*/
+    private PlayerInterface player = Player.getPlayer();
+    private ScoreThread scoreThread = new ScoreThread(player);
 
     private BackgroundMusicPlayer bgm = new BackgroundMusicPlayer();
     Sound cashSFX = Gdx.audio.newSound(Gdx.files.internal(Consts.SFX_CASH_POINTS));
@@ -68,7 +64,7 @@ public class DebugScreen implements Screen {
         generator.dispose();
 
         //Start updating chunk score
-        player.getPlayer().startChunkScore(scoreThread);
+        player.startChunkScore(scoreThread);
 
         //Start playing background music
         bgm.startMusic();

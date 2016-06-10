@@ -10,7 +10,7 @@ import com.martinstephencox.twilightdrift.main.ScoreThread;
 public class Player implements PlayerInterface {
 
     //Singleton instance of player object
-    private Player player;
+    private static Player player;
 
     private int currentPos = Consts.CENTER_POS;
     private int currentTotalScore = 0;  //Total score is only ever increased when the player misses a good target/hits a bad target
@@ -21,7 +21,7 @@ public class Player implements PlayerInterface {
     private String playerName = "";
     private Thread scoreThread;
 
-    public Player() {
+    private Player() {
         //Load texture, sprite
     }
 
@@ -29,7 +29,7 @@ public class Player implements PlayerInterface {
      * Gets the Singleton instance of the player class
      * @return Player The instance of the Player class
      */
-    public Player getPlayer() {
+    public static Player getPlayer() {
         if (player == null) {
             player = new Player();
         }

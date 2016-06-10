@@ -9,8 +9,6 @@ import com.martinstephencox.twilightdrift.main.ScoreThread;
  */
 public interface PlayerInterface {
 
-    Player getPlayer();
-
     int getCurrentPos();
 
     int getCurrentTotalScore();
