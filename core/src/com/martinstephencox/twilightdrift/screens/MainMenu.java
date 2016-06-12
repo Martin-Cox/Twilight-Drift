@@ -35,28 +35,77 @@ public class MainMenu implements Screen {
 
     private SpriteBatch batch;
     private BitmapFont fontEstrogenTitle;
+    private BitmapFont fontEstrogenMenuPlay;
+    private BitmapFont fontEstrogenMenuHelp;
+    private BitmapFont fontEstrogenMenuExit;
+    private BitmapFont fontEstrogenMenuPlayActive;
+    private BitmapFont fontEstrogenMenuHelpActive;
+    private BitmapFont fontEstrogenMenuExitActive;
+
+    private float titleR = 0/255f;
+    private float titleG = 151/255f;
+    private float titleB = 157/255f;
+
+    private float itemR = 0/255f;
+    private float itemG = 151/255f;
+    private float itemB = 157/255f;
+
+    private float activeItemR = 189/255f;
+    private float activeItemG = 13/255f;
+    private float activeItemB = 97/255f;
+
+    private enum currentOptionValues {PLAY, HELP, EXIT};
+
+    private currentOptionValues currentOption = currentOptionValues.PLAY;
 
     public MainMenu() {
         batch = new SpriteBatch();
 
         //Load up title font
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Consts.FONT_ESTROGEN));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        FreeTypeFontGenerator titleGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Consts.FONT_ESTROGEN));
+        FreeTypeFontGenerator.FreeTypeFontParameter titleParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        titleParameter.size = 80;
+        titleParameter.color = new Color(titleR, titleG, titleB, 1);
+        titleParameter.borderWidth = 2;
+        titleParameter.borderColor = Color.WHITE;
+        titleParameter.shadowColor = Color.WHITE;
+        titleParameter.shadowOffsetX = -4;
+        titleParameter.shadowOffsetY = 4;
+        titleParameter.kerning = true;
+        fontEstrogenTitle = titleGenerator.generateFont(titleParameter);
+        titleGenerator.dispose();
 
-        float titleR = 0/255f;
-        float titleG = 151/255f;
-        float titleB = 157/255f;
+        //Load up normal menu item font
+        FreeTypeFontGenerator menuItemGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Consts.FONT_ESTROGEN));
+        FreeTypeFontGenerator.FreeTypeFontParameter menuItemParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        menuItemParameter.size = 48;
+        menuItemParameter.color = new Color(itemR, itemG, itemB, 1);
+        menuItemParameter.borderWidth = 2;
+        menuItemParameter.borderColor = Color.WHITE;
+        menuItemParameter.shadowColor = Color.WHITE;
+        menuItemParameter.shadowOffsetX = -4;
+        menuItemParameter.shadowOffsetY = 4;
+        menuItemParameter.kerning = true;
+        fontEstrogenMenuPlay = menuItemGenerator.generateFont(menuItemParameter);
+        fontEstrogenMenuHelp = menuItemGenerator.generateFont(menuItemParameter);
+        fontEstrogenMenuExit = menuItemGenerator.generateFont(menuItemParameter);
+        menuItemGenerator.dispose();
 
-        parameter.size = 80;
-        parameter.color = new Color(titleR, titleG, titleB, 1);
-        parameter.borderWidth = 2;
-        parameter.borderColor = Color.WHITE;
-        parameter.shadowColor = Color.WHITE;
-        parameter.shadowOffsetX = -4;
-        parameter.shadowOffsetY = 4;
-        parameter.kerning = true;
-        fontEstrogenTitle = generator.generateFont(parameter);
-        generator.dispose();
+        //Load up active menu item font
+        FreeTypeFontGenerator menuItemActiveGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Consts.FONT_ESTROGEN));
+        FreeTypeFontGenerator.FreeTypeFontParameter menuItemActiveParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        menuItemActiveParameter.size = 48;
+        menuItemActiveParameter.color = new Color(activeItemR, activeItemG, activeItemB, 1);
+        menuItemActiveParameter.borderWidth = 2;
+        menuItemActiveParameter.borderColor = Color.WHITE;
+        menuItemActiveParameter.shadowColor = Color.WHITE;
+        menuItemActiveParameter.shadowOffsetX = -4;
+        menuItemActiveParameter.shadowOffsetY = 4;
+        menuItemActiveParameter.kerning = true;
+        fontEstrogenMenuPlayActive = menuItemActiveGenerator.generateFont(menuItemActiveParameter);
+        fontEstrogenMenuHelpActive = menuItemActiveGenerator.generateFont(menuItemActiveParameter);
+        fontEstrogenMenuExitActive = menuItemActiveGenerator.generateFont(menuItemActiveParameter);
+        menuItemActiveGenerator.dispose();
     }
 
     public void show() {
@@ -80,16 +129,66 @@ public class MainMenu implements Screen {
         //Draw the title logo
         fontEstrogenTitle.draw(batch, "Twilight Drift", 120, 550);
 
+        //Draw the menu options. If the current menu option is active then draw the active version instead
+        switch (currentOption) {
+            case PLAY :
+                fontEstrogenMenuPlayActive.draw(batch, "Play", 350, 400);
+                fontEstrogenMenuHelp.draw(batch, "Help", 350, 300);
+                fontEstrogenMenuExit.draw(batch, "Exit", 350, 200);
+                break;
+            case HELP :
+                fontEstrogenMenuPlay.draw(batch, "Play", 350, 400);
+                fontEstrogenMenuHelpActive.draw(batch, "Help", 350, 300);
+                fontEstrogenMenuExit.draw(batch, "Exit", 350, 200);
+
+                break;
+            case EXIT :
+                fontEstrogenMenuPlay.draw(batch, "Play", 350, 400);
+                fontEstrogenMenuHelp.draw(batch, "Help", 350, 300);
+                fontEstrogenMenuExitActive.draw(batch, "Exit", 350, 200);
+                break;
+        }
+
         batch.end();
 
         scrollForeground();
         scrollMidground();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
-            DebugScreen ds = new DebugScreen();
-            ds.create();
-            ((Game)Gdx.app.getApplicationListener()).setScreen(ds);
-            this.dispose();
+
+        //--------- Handle input ---------
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            if (currentOption == currentOptionValues.PLAY) {
+                currentOption = currentOptionValues.HELP;
+            } else if (currentOption == currentOptionValues.HELP) {
+                currentOption = currentOptionValues.EXIT;
+            }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            if (currentOption == currentOptionValues.HELP) {
+                currentOption = currentOptionValues.PLAY;
+            } else if (currentOption == currentOptionValues.EXIT) {
+                currentOption = currentOptionValues.HELP;
+            }
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            switch (currentOption) {
+                case PLAY :
+                    DebugScreen ds = new DebugScreen();
+                    ds.create();
+                    ((Game)Gdx.app.getApplicationListener()).setScreen(ds);
+                    this.dispose();
+                    break;
+                case HELP :
+                    //Load help screen
+                    break;
+                case EXIT :
+                    Gdx.app.exit();
+                    break;
+            }
         }
     }
 
