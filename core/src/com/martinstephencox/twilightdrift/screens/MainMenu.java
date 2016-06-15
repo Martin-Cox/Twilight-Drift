@@ -125,39 +125,45 @@ public class MainMenu implements Screen {
     public void render(float delta) {
         batch.begin();
 
-        //Draw each texture on the screen
+        //Draw background textures on the screen
         batch.draw(staticBgTexture, 0, 0);
         batch.draw(scrollingMgTextureFirst, scrollingMgTextureFirstX, 0);
         batch.draw(scrollingMgTextureSecond, scrollingMgTextureSecondX, 0);
         batch.draw(scrollingFgTextureSimple, scrollingFgTextureSimpleX, 0);
         batch.draw(scrollingFgTextureDecorated, scrollingFgTextureDecoratedX, 0);
 
-        //Draw the title logo
-        fontEstrogenTitle.draw(batch, "Twilight Drift", 120, 550);
-
-        //Draw the menu options. If the current menu option is active then draw the active version instead
-        switch (currentOption) {
-            case PLAY :
-                fontEstrogenMenuPlayActive.draw(batch, "Play", 350, 400);
-                fontEstrogenMenuHelp.draw(batch, "Help", 350, 300);
-                fontEstrogenMenuExit.draw(batch, "Exit", 350, 200);
-                break;
-            case HELP :
-                fontEstrogenMenuPlay.draw(batch, "Play", 350, 400);
-                fontEstrogenMenuHelpActive.draw(batch, "Help", 350, 300);
-                fontEstrogenMenuExit.draw(batch, "Exit", 350, 200);
-                break;
-            case EXIT :
-                fontEstrogenMenuPlay.draw(batch, "Play", 350, 400);
-                fontEstrogenMenuHelp.draw(batch, "Help", 350, 300);
-                fontEstrogenMenuExitActive.draw(batch, "Exit", 350, 200);
-                break;
-        }
-
         if (showHelp) {
-            batch.draw(helpDialogTexture, 25, 25);
-            fontEstrogenMenuExitActive.draw(batch, "HELP BOX WILL BE DISPLAYED NOW, PRESS ENTER AGAIN TO EXIT", 10, 50);
+            //Show help text
+
+            //batch.draw(helpDialogTexture, 25, 25);
+            fontEstrogenTitle.draw(batch, "How To Play", 150, 550);
+            fontEstrogenMenuPlayActive.draw(batch, "Back", 350, 200);
+        } else {
+            //Show the normal menu
+
+            //Draw the title logo
+            fontEstrogenTitle.draw(batch, "Twilight Drift", 120, 550);
+
+            //Draw the menu options. If the current menu option is active then draw the active version instead
+            switch (currentOption) {
+                case PLAY :
+                    fontEstrogenMenuPlayActive.draw(batch, "Play", 350, 400);
+                    fontEstrogenMenuHelp.draw(batch, "Help", 350, 300);
+                    fontEstrogenMenuExit.draw(batch, "Exit", 350, 200);
+                    break;
+                case HELP :
+                    fontEstrogenMenuPlay.draw(batch, "Play", 350, 400);
+                    fontEstrogenMenuHelpActive.draw(batch, "Help", 350, 300);
+                    fontEstrogenMenuExit.draw(batch, "Exit", 350, 200);
+                    break;
+                case EXIT :
+                    fontEstrogenMenuPlay.draw(batch, "Play", 350, 400);
+                    fontEstrogenMenuHelp.draw(batch, "Help", 350, 300);
+                    fontEstrogenMenuExitActive.draw(batch, "Exit", 350, 200);
+                    break;
+            }
         }
+
 
 
         batch.end();
