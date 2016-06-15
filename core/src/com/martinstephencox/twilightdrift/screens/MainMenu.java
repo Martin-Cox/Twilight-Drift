@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -140,7 +141,6 @@ public class MainMenu implements Screen {
                 fontEstrogenMenuPlay.draw(batch, "Play", 350, 400);
                 fontEstrogenMenuHelpActive.draw(batch, "Help", 350, 300);
                 fontEstrogenMenuExit.draw(batch, "Exit", 350, 200);
-
                 break;
             case EXIT :
                 fontEstrogenMenuPlay.draw(batch, "Play", 350, 400);
@@ -177,9 +177,11 @@ public class MainMenu implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             switch (currentOption) {
                 case PLAY :
-                    DebugScreen ds = new DebugScreen();
-                    ds.create();
-                    ((Game)Gdx.app.getApplicationListener()).setScreen(ds);
+                    //DebugScreen newScreen = new DebugScreen();
+                    //newScreen.create();
+
+                    GameScreen newScreen = new GameScreen();
+                    ((Game)Gdx.app.getApplicationListener()).setScreen(newScreen);
                     this.dispose();
                     break;
                 case HELP :

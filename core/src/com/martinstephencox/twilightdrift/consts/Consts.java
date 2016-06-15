@@ -57,6 +57,7 @@ public class Consts {
     public static final String IMAGE_SCROLLING_MENU_FOREGROUND_1 = "images/menu/menu_scrolling_bg_transparent_1.png";
     public static final String IMAGE_SCROLLING_MENU_FOREGROUND_2 = "images/menu/menu_scrolling_bg_transparent_2.png";
     public static final String IMAGE_SCROLLING_MENU_MIDGROUND = "images/menu/menu_scrolling_city_transparent.png";
+    public static final String IMAGE_GAME_WAVES = "images/game/waves_transparent.png";
 
     //Default Options
     public static final float MUSIC_VOLUME = 1.0f;
