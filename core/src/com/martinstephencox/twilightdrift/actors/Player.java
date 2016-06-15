@@ -1,5 +1,7 @@
 package com.martinstephencox.twilightdrift.actors;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.martinstephencox.twilightdrift.consts.Consts;
 import com.martinstephencox.twilightdrift.interfaces.PlayerInterface;
 import com.martinstephencox.twilightdrift.main.ScoreThread;
@@ -12,7 +14,8 @@ public class Player implements PlayerInterface {
     //Singleton instance of player object
     private static Player player;
 
-    private int currentPos = Consts.CENTER_POS;
+    private Texture texture = new Texture(Gdx.files.internal(Consts.IMAGE_PLAYER));
+    private int currentPos = Consts.CENTER_TRACK;
     private int currentTotalScore = 0;  //Total score is only ever increased when the player misses a good target/hits a bad target
     private int currentChunkScore = 0;  //Chunk score is the representation of the players score since their last hit/miss
     private int currentMultiplier = Consts.MIN_SCORE_MULTIPLIER;
@@ -21,8 +24,11 @@ public class Player implements PlayerInterface {
     private String playerName = "";
     private Thread scoreThread;
 
+    private int y = 50;
+    private int x = Consts.CENTER_POS;
+
     private Player() {
-        //Load texture, sprite
+
     }
 
     /**
@@ -60,6 +66,20 @@ public class Player implements PlayerInterface {
 
     public void resetMultiplier() { currentMultiplier = Consts.MIN_SCORE_MULTIPLIER; }
 
+    public Texture getTexture() { return texture; }
+
+    public int getY() { return y; }
+
+    public int getX() { return x; }
+
+    /**
+     * Returns the center X position of the player sprite. X by itself represents the left edge of the sprite,
+     * so we need to add half the texture width in order to get the actual center X value.
+     * @return int The center X position of the player sprite
+     */
+    public int getAdjustedX() {
+        return x - texture.getWidth()/2;
+    }
 
     /**
      * Starts updating the chunk score by Consts.UPDATE_SCORE_RATE times per second
@@ -159,7 +179,7 @@ public class Player implements PlayerInterface {
      * @return int The updated player position
      */
     public int resetPos() {
-        currentPos = Consts.CENTER_POS;
+        currentPos = Consts.CENTER_TRACK;
         return currentPos;
     }
 
@@ -174,15 +194,18 @@ public class Player implements PlayerInterface {
             case LEFT:
                 if (currentPos > Consts.LEFT_BOUND) {
                     currentPos --;
+                    x -= Consts.TRACK_DIFFERENCE;
                 }
                 break;
             case RIGHT:
                 if (currentPos < Consts.RIGHT_BOUND) {
                     currentPos ++;
+                    x += Consts.TRACK_DIFFERENCE;
                 }
                 break;
             case RECENTER:
-                currentPos = Consts.CENTER_POS;
+                currentPos = Consts.CENTER_TRACK;
+                x = Consts.CENTER_POS;
                 break;
         }
 

@@ -1,5 +1,6 @@
 package com.martinstephencox.twilightdrift.interfaces;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.martinstephencox.twilightdrift.actors.Player;
 import com.martinstephencox.twilightdrift.consts.Consts;
 import com.martinstephencox.twilightdrift.main.ScoreThread;
@@ -26,6 +27,14 @@ public interface PlayerInterface {
     void resetChunkScore();
 
     void resetMultiplier();
+
+    Texture getTexture();
+
+    int getY();
+
+    int getX();
+
+    int getAdjustedX();
 
     void startChunkScore(ScoreThread st);
 

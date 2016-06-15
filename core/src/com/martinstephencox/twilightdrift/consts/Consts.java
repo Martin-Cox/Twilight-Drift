@@ -16,10 +16,19 @@ public class Consts {
     public static final int MENU_MIDGROUND_WIDTH = 1600;
 
     //Actor positioning on "tracks"
+    public static final int LEFT_POS = 200;
+    public static final int MID_LEFT_POS = 300;
+    public static final int CENTER_POS = 400;
+    public static final int MID_RIGHT_POS = 500;
+    public static final int RIGHT_POS = 600;
+    public static final int TRACK_DIFFERENCE = 100; //The difference in pixels between the center of each track
+
+    //Track bounds
     public static final int LEFT_BOUND = 0;
     public static final int RIGHT_BOUND = 4;
-    public static final int CENTER_POS = 2;
+    public static final int CENTER_TRACK = 2;
     public static final int NUM_TRACKS = 5;
+
 
     //Target configurations
     public static final int TARGET_PLACEMENT_SINGLE = 1;
@@ -58,6 +67,7 @@ public class Consts {
     public static final String IMAGE_SCROLLING_MENU_FOREGROUND_2 = "images/menu/menu_scrolling_bg_transparent_2.png";
     public static final String IMAGE_SCROLLING_MENU_MIDGROUND = "images/menu/menu_scrolling_city_transparent.png";
     public static final String IMAGE_GAME_WAVES = "images/game/waves_transparent.png";
+    public static final String IMAGE_PLAYER = "images/game/player_transparent.png";
 
     //Default Options
     public static final float MUSIC_VOLUME = 1.0f;
