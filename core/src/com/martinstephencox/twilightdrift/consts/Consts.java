@@ -66,6 +66,7 @@ public class Consts {
     public static final String IMAGE_SCROLLING_MENU_FOREGROUND_1 = "images/menu/menu_scrolling_bg_transparent_1.png";
     public static final String IMAGE_SCROLLING_MENU_FOREGROUND_2 = "images/menu/menu_scrolling_bg_transparent_2.png";
     public static final String IMAGE_SCROLLING_MENU_MIDGROUND = "images/menu/menu_scrolling_city_transparent.png";
+    public static final String IMAGE_HELP_DIALOG = "images/menu/help_dialog.png";
     public static final String IMAGE_GAME_WAVES = "images/game/waves_transparent.png";
     public static final String IMAGE_PLAYER = "images/game/player_transparent.png";
 

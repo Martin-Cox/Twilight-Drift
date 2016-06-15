@@ -34,6 +34,9 @@ public class MainMenu implements Screen {
     private int scrollingMgTextureFirstX = 0;
     private int scrollingMgTextureSecondX = Consts.MENU_MIDGROUND_WIDTH;        //Needs to be directly to the right of the first MgTexture
 
+    //The help dialog box texture
+    private Texture helpDialogTexture = new Texture(Gdx.files.internal(Consts.IMAGE_HELP_DIALOG));
+
     private SpriteBatch batch;
     private BitmapFont fontEstrogenTitle;
     private BitmapFont fontEstrogenMenuPlay;
@@ -58,6 +61,8 @@ public class MainMenu implements Screen {
     private enum currentOptionValues {PLAY, HELP, EXIT};
 
     private currentOptionValues currentOption = currentOptionValues.PLAY;
+
+    private boolean showHelp = false;
 
     public MainMenu() {
         batch = new SpriteBatch();
@@ -149,6 +154,12 @@ public class MainMenu implements Screen {
                 break;
         }
 
+        if (showHelp) {
+            batch.draw(helpDialogTexture, 25, 25);
+            fontEstrogenMenuExitActive.draw(batch, "HELP BOX WILL BE DISPLAYED NOW, PRESS ENTER AGAIN TO EXIT", 10, 50);
+        }
+
+
         batch.end();
 
         scrollForeground();
@@ -159,37 +170,45 @@ public class MainMenu implements Screen {
 
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            if (currentOption == currentOptionValues.PLAY) {
-                currentOption = currentOptionValues.HELP;
-            } else if (currentOption == currentOptionValues.HELP) {
-                currentOption = currentOptionValues.EXIT;
+            if (!showHelp) {
+                if (currentOption == currentOptionValues.PLAY) {
+                    currentOption = currentOptionValues.HELP;
+                } else if (currentOption == currentOptionValues.HELP) {
+                    currentOption = currentOptionValues.EXIT;
+                }
             }
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            if (currentOption == currentOptionValues.HELP) {
-                currentOption = currentOptionValues.PLAY;
-            } else if (currentOption == currentOptionValues.EXIT) {
-                currentOption = currentOptionValues.HELP;
+            if (!showHelp) {
+                if (currentOption == currentOptionValues.HELP) {
+                    currentOption = currentOptionValues.PLAY;
+                } else if (currentOption == currentOptionValues.EXIT) {
+                    currentOption = currentOptionValues.HELP;
+                }
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            switch (currentOption) {
-                case PLAY :
-                    //DebugScreen newScreen = new DebugScreen();
-                    //newScreen.create();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (showHelp == false) {
+                switch (currentOption) {
+                    case PLAY:
+                        //DebugScreen newScreen = new DebugScreen();
+                        //newScreen.create();
 
-                    GameScreen newScreen = new GameScreen();
-                    ((Game)Gdx.app.getApplicationListener()).setScreen(newScreen);
-                    this.dispose();
-                    break;
-                case HELP :
-                    //Load help screen
-                    break;
-                case EXIT :
-                    Gdx.app.exit();
-                    break;
+                        GameScreen gameScreen = new GameScreen();
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(gameScreen);
+                        this.dispose();
+                        break;
+                    case HELP:
+                        showHelp = true;
+                        break;
+                    case EXIT:
+                        Gdx.app.exit();
+                        break;
+                }
+            } else {
+                showHelp = false;
             }
         }
     }

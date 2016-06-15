@@ -53,7 +53,7 @@ public class GameScreen implements Screen {
         player.startChunkScore(scoreThread);
 
         //Start playing background music
-        //bgm.startMusic();
+        bgm.startMusic();
     }
 
     public void show() {
