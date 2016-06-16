@@ -1,6 +1,7 @@
 package com.martinstephencox.twilightdrift.actors;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
@@ -8,15 +9,23 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  */
 public abstract class Target {
 
-    private Sprite sprite;
     private Texture texture;
     private int position;
-    private double x;
-    private double y;
+    private int x;
+    private int y;
 
+    public abstract void spawn(Batch batch, int pos);
+
+    public abstract void redraw(Batch batch, int scrollRate);
 
     public abstract void onHit();
 
     public abstract void onMiss();
+
+    public abstract int getX();
+
+    public abstract int getY();
+
+    public abstract void despawn();
 
 }

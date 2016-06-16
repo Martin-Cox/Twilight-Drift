@@ -23,13 +23,14 @@ public class Consts {
     public static final int MID_RIGHT_POS = 500;
     public static final int RIGHT_POS = 600;
     public static final int TRACK_DIFFERENCE = 100; //The difference in pixels between the center of each track
+    public static final int SPAWN_Y = 650;
+    public static final int ROW_HEIGHT = 100; //The difference in pixels between each "row" of targets
 
     //Track bounds
     public static final int LEFT_BOUND = 0;
     public static final int RIGHT_BOUND = 4;
     public static final int CENTER_TRACK = 2;
     public static final int NUM_TRACKS = 5;
-
 
     //Target configurations
     public static final int TARGET_PLACEMENT_SINGLE = 1;
@@ -71,6 +72,7 @@ public class Consts {
     public static final String IMAGE_GAME_WAVES = "images/game/waves_transparent.png";
     public static final String IMAGE_SCROLLING_GAME_MIDGROUND = "images/game/game_mid_transparent.png";
     public static final String IMAGE_PLAYER = "images/game/player_transparent.png";
+    public static final String IMAGE_BAD_TARGET = "images/game/bad_transparent.png";
 
     //Default Options
     public static final float MUSIC_VOLUME = 1.0f;
