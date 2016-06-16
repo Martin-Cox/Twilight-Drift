@@ -7,25 +7,20 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 /**
  * Created by Martin on 02/06/2016.
  */
-public abstract class Target {
+public interface Target {
 
-    private Texture texture;
-    private int position;
-    private int x;
-    private int y;
+    void spawn(Batch batch, int pos);
 
-    public abstract void spawn(Batch batch, int pos);
+    void redraw(Batch batch, int scrollRate);
 
-    public abstract void redraw(Batch batch, int scrollRate);
+    void onHit();
 
-    public abstract void onHit();
+    void onMiss();
 
-    public abstract void onMiss();
+    int getX();
 
-    public abstract int getX();
+    int getY();
 
-    public abstract int getY();
-
-    public abstract void despawn();
+    void despawn();
 
 }

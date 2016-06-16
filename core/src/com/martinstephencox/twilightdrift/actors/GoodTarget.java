@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 /**
  * Created by Martin on 02/06/2016.
  */
-public class GoodTarget extends Target {
+public class GoodTarget implements Target {
 
     public GoodTarget() {
         super();

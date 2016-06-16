@@ -195,7 +195,7 @@ public class GameScreen implements Screen {
         boolean[] config = generator.generateMediumConfig();
         for (int i = 0; i < config.length; i++) {
             if (config[i] == true) {
-                BadTarget target = new BadTarget();
+                Target target = new BadTarget();
                 badTargets.add(target);
                 target.spawn(batch, i);
             }

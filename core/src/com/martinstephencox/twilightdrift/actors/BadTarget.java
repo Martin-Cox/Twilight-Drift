@@ -8,7 +8,7 @@ import com.martinstephencox.twilightdrift.consts.Consts;
 /**
  * Created by Martin on 16/06/2016.
  */
-public class BadTarget extends Target {
+public class BadTarget implements Target {
 
     Texture texture = new Texture(Gdx.files.internal(Consts.IMAGE_BAD_TARGET));
     int y = Consts.SPAWN_Y;
