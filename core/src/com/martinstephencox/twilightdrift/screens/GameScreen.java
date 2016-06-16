@@ -22,6 +22,15 @@ import com.martinstephencox.twilightdrift.main.ScoreThread;
 public class GameScreen implements Screen {
 
     private Texture waveTexture = new Texture(Gdx.files.internal(Consts.IMAGE_GAME_WAVES));
+    private Texture midTextureFirst = new Texture(Gdx.files.internal(Consts.IMAGE_SCROLLING_GAME_MIDGROUND));
+    private Texture midTextureSecond = new Texture(Gdx.files.internal(Consts.IMAGE_SCROLLING_GAME_MIDGROUND));
+
+    private int midTextureFirstY = 0;
+    private int midTextureSecondY = Consts.GAME_MIDGROUND_HEIGHT;
+
+    private int scrollRate = 1;
+    private int maxScrollRate = 8;
+    private int scoreIncreaseScrollValue = 5000;
 
     private SpriteBatch batch;
     private BitmapFont fontEstrogen;
@@ -53,7 +62,7 @@ public class GameScreen implements Screen {
         player.startChunkScore(scoreThread);
 
         //Start playing background music
-        bgm.startMusic();
+        //bgm.startMusic();
     }
 
     public void show() {
@@ -61,7 +70,7 @@ public class GameScreen implements Screen {
     }
 
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(127/255f, 168/255f, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //Move left
@@ -113,12 +122,24 @@ public class GameScreen implements Screen {
         }
 
         batch.begin();
+        batch.draw(midTextureFirst, 0, midTextureFirstY);
+        batch.draw(midTextureSecond, 0, midTextureSecondY);
         batch.draw(waveTexture, 0, 0);
         batch.draw(player.getTexture(), player.getAdjustedX(), player.getY());
         fontEstrogen.draw(batch, "Total Score: " + player.getCurrentTotalScore(), 10, 450);
         fontEstrogen.draw(batch, "Chunk Score: " + player.getCurrentChunkScore(), 10, 400);
         fontEstrogen.draw(batch, "Multiplier: " + player.getCurrentMultiplier(), 10, 350);
         batch.end();
+
+        //Increase the background scroll of the image at increasingly higher scores
+        if (scrollRate < maxScrollRate) {
+            if (player.getCurrentTotalScore() > scoreIncreaseScrollValue) {
+                scoreIncreaseScrollValue = scoreIncreaseScrollValue * 2;
+                scrollRate++;
+            }
+        }
+
+        scrollMidground();
 
     }
 
@@ -148,6 +169,22 @@ public class GameScreen implements Screen {
         hitSFX.play();
         bgm.lowerVolumeOnHit();
         scoreThread.pauseScoreThread();
+    }
+
+    public void scrollMidground() {
+        //Move textures down at scrollRate pixels per frame
+        midTextureFirstY -= scrollRate;
+        midTextureSecondY -= scrollRate;
+
+        //If first texture goes out of view via the bottom edge of the window, move it to the top edge of window to give impression of infinite scroll
+        if ((midTextureFirstY) < -Consts.GAME_MIDGROUND_HEIGHT) {
+            midTextureFirstY = Consts.GAME_MIDGROUND_HEIGHT - scrollRate;
+        }
+
+        //If second texture goes out of view via the bottom edge of the window, move it to the top edge of window to give impression of infinite scroll
+        if ((midTextureSecondY) < -Consts.GAME_MIDGROUND_HEIGHT) {
+            midTextureSecondY = Consts.GAME_MIDGROUND_HEIGHT - scrollRate;
+        }
     }
 
     /*public void scrollWaves() {

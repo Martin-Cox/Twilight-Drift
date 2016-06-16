@@ -14,6 +14,7 @@ public class Consts {
     public static final int MENU_FOREGROUND_WIDTH = 800;
     public static final int MENU_MIDGROUND_SCROLL_RATE = 2;
     public static final int MENU_MIDGROUND_WIDTH = 1600;
+    public static final int GAME_MIDGROUND_HEIGHT = 600;
 
     //Actor positioning on "tracks"
     public static final int LEFT_POS = 200;
@@ -68,6 +69,7 @@ public class Consts {
     public static final String IMAGE_SCROLLING_MENU_MIDGROUND = "images/menu/menu_scrolling_city_transparent.png";
     public static final String IMAGE_HELP_DIALOG = "images/menu/help_dialog.png";
     public static final String IMAGE_GAME_WAVES = "images/game/waves_transparent.png";
+    public static final String IMAGE_SCROLLING_GAME_MIDGROUND = "images/game/game_mid_transparent.png";
     public static final String IMAGE_PLAYER = "images/game/player_transparent.png";
 
     //Default Options
