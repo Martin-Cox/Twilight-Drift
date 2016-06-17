@@ -60,7 +60,7 @@ public class TargetSpawner implements Runnable {
     public void run() {
         while(true) {
             try {
-                boolean[] config = new boolean[5];
+                boolean[] config = new boolean[Consts.NUM_TRACKS];
 
                 switch(difficulty) {
                     case SINGLE:

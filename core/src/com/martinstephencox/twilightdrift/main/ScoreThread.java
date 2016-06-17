@@ -8,6 +8,10 @@ import com.martinstephencox.twilightdrift.interfaces.PlayerInterface;
  */
 public class ScoreThread implements Runnable {
 
+    /**
+     * A separate thread is used to increase the chunk score value every updatePeriod ms to prevent lag/pausing on the main render thread
+     */
+
     private PlayerInterface player;
     private int updatePeriod;
     private volatile boolean isPaused = false;

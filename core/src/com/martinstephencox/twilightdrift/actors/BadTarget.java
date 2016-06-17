@@ -37,6 +37,10 @@ public class BadTarget implements Target {
         }
     }
 
+    /**
+     * Creates a new sprite on the game screen using the position values already defined at instance creation
+     * @param batch The batch object to draw the sprite onto
+     */
     public void spawn(Batch batch) {
         batch.begin();
         texture = new Texture(Gdx.files.internal(Consts.IMAGE_BAD_TARGET));
@@ -46,6 +50,11 @@ public class BadTarget implements Target {
         batch.end();
     }
 
+    /**
+     * Redraws the instance of a target by moving it vertically down at scrollRate pixels per frame
+     * @param batch The batch object to draw the sprite onto
+     * @param scrollRate The number of pixels to move the target vertically down by per frame
+     */
     public void redraw(Batch batch, int scrollRate) {
         y -= scrollRate;
 

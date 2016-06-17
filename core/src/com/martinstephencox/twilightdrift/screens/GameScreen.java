@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.martinstephencox.twilightdrift.actors.BadTarget;
 import com.martinstephencox.twilightdrift.actors.Player;
 import com.martinstephencox.twilightdrift.actors.Target;
 import com.martinstephencox.twilightdrift.actors.TargetConfigGenerator;
@@ -78,7 +79,6 @@ public class GameScreen implements Screen {
         bgm.startMusic();
 
         //Start spawning bad targets
-        //createBadTargetConfig();
         spawner = new TargetSpawner(targets, batch);
         new Thread(spawner).start();
     }
@@ -155,6 +155,7 @@ public class GameScreen implements Screen {
             targets.add(t);
         }
 
+        //Clear the TargetSpawner threads generated target list to prevent duplicate targets being spawned
         spawner.clearTargets();
 
         //Spawn and redraw all targets
@@ -189,7 +190,7 @@ public class GameScreen implements Screen {
         }
 
         scrollMidground();
-        checkBadTargetCollision();
+        checkTargetCollision();
     }
 
     public void resize(int width, int height) {
@@ -212,34 +213,10 @@ public class GameScreen implements Screen {
 
     }
 
-    /*private void createBadTargetConfig() {
-        boolean[] config = new boolean[5];
-
-        switch(difficulty) {
-            case SINGLE:
-                config = generator.generateSingleConfig();
-                break;
-            case EASY:
-                config = generator.generateEasyConfig();
-                break;
-            case MEDIUM:
-                config = generator.generateMediumConfig();
-                break;
-            case HARD:
-                config = generator.generateHardConfig();
-                break;
-        }
-
-        for (int i = 0; i < config.length; i++) {
-            if (config[i] == true) {
-                Target target = new BadTarget();
-                targets.add(target);
-                target.spawn(batch, i);
-            }
-        }
-    }*/
-
-    private void checkBadTargetCollision() {
+    /**
+     * Checks whether the player has collided with any targets
+     */
+    private void checkTargetCollision() {
         for (Target t : targets) {
             if (t.getX() == player.getX()) {
                 //In the same column
@@ -247,7 +224,9 @@ public class GameScreen implements Screen {
                 //TODO: This will only trigger if the player and the bad target are overlapping each other exactly.
                 //TODO: Implement bounding box collision detection only for the Y axis (badTarget overlapping player at any value of Y)
                 if (t.getY() == player.getY()) {
-                    playerHitBad();
+                    if (t instanceof BadTarget) {
+                        playerHitBad();
+                    }
                 }
 
                 /*if (t.getY() + t.getHeight()/2 < player.getY() + player.getTexture().getHeight()/2) {
@@ -260,6 +239,9 @@ public class GameScreen implements Screen {
 
     }
 
+    /**
+     * The player hit a bad target, process all game logic for hitting a bad target
+     */
     private void playerHitBad() {
         player.resetChunkScore();
         player.resetMultiplier();
@@ -268,8 +250,10 @@ public class GameScreen implements Screen {
         scoreThread.pauseScoreThread();
     }
 
+    /**
+     * Move textures down at scrollRate pixels per frame
+     */
     public void scrollMidground() {
-        //Move textures down at scrollRate pixels per frame
         midTextureFirstY -= scrollRate;
         midTextureSecondY -= scrollRate;
 
@@ -283,20 +267,4 @@ public class GameScreen implements Screen {
             midTextureSecondY = Consts.GAME_MIDGROUND_HEIGHT - scrollRate;
         }
     }
-
-    /*public void scrollWaves() {
-        //Move textures down at scrollRate pixels per frame
-        wavesFirstY -= scrollRate;
-        wavesSecondY -= scrollRate;
-
-        //If first texture goes out of view via the bottom edge of the window, move it to the top edge of window to give impression of infinite scroll
-        if ((wavesFirstY) < -600) {
-            wavesFirstY = 600 - scrollRate;
-        }
-
-        //If second texture goes out of view via the bottom edge of the window, move it to the top edge of window to give impression of infinite scroll
-        if ((wavesSecondY) < -600) {
-            wavesSecondY = 600 - scrollRate;
-        }
-    }*/
 }
