@@ -11,7 +11,7 @@ public class GoodTarget implements Target {
         super();
     }
 
-    public void spawn(Batch batch, int pos) {
+    public void spawn(Batch batch) {
 
     }
 
@@ -34,6 +34,12 @@ public class GoodTarget implements Target {
     public int getY() {
         return 0;
     }
+
+    public int getHeight() { return 0; }
+
+    public boolean isSpawned() { return false; }
+
+    public void setSpawned() {}
 
     public void despawn() {
 

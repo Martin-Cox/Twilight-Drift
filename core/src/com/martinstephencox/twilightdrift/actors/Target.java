@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  */
 public interface Target {
 
-    void spawn(Batch batch, int pos);
+    void spawn(Batch batch);
 
     void redraw(Batch batch, int scrollRate);
 
@@ -20,6 +20,12 @@ public interface Target {
     int getX();
 
     int getY();
+
+    int getHeight();
+
+    boolean isSpawned();
+
+    void setSpawned();
 
     void despawn();
 

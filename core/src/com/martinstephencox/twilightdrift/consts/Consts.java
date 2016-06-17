@@ -43,6 +43,9 @@ public class Consts {
     public static final int SPACING_MEDIUM = 4;
     public static final int SPACING_HARD = 2;
 
+    //Difficulty level
+    public enum DIFFICULTY {SINGLE, EASY, MEDIUM, HARD}
+
     //Player movement
     public enum MOVEMENT {LEFT, RIGHT, RECENTER}
 

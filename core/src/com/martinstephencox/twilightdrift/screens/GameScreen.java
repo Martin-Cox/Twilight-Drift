@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.martinstephencox.twilightdrift.actors.BadTarget;
 import com.martinstephencox.twilightdrift.actors.Player;
 import com.martinstephencox.twilightdrift.actors.Target;
 import com.martinstephencox.twilightdrift.actors.TargetConfigGenerator;
@@ -18,10 +17,9 @@ import com.martinstephencox.twilightdrift.audio.BackgroundMusicPlayer;
 import com.martinstephencox.twilightdrift.consts.Consts;
 import com.martinstephencox.twilightdrift.interfaces.PlayerInterface;
 import com.martinstephencox.twilightdrift.main.ScoreThread;
+import com.martinstephencox.twilightdrift.main.TargetSpawner;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Martin on 05/06/2016.
@@ -40,6 +38,10 @@ public class GameScreen implements Screen {
     private int maxScrollRate = 8;
     private int scoreIncreaseScrollValue = 5000;
 
+    private enum difficultyRange {SINGLE, EASY, MEDIUM, HARD};
+
+    private difficultyRange difficulty = difficultyRange.SINGLE;
+
     private SpriteBatch batch;
     private BitmapFont fontEstrogen;
 
@@ -51,8 +53,9 @@ public class GameScreen implements Screen {
     Sound cashSFX = Gdx.audio.newSound(Gdx.files.internal(Consts.SFX_CASH_POINTS));
     Sound hitSFX = Gdx.audio.newSound(Gdx.files.internal(Consts.SFX_HIT_BAD));
 
-    private ArrayList<Target> badTargets = new ArrayList<>();
+    private ArrayList<Target> targets = new ArrayList<>();
     private TargetConfigGenerator generator = new TargetConfigGenerator();
+    private TargetSpawner spawner;
 
     public GameScreen() {
         batch = new SpriteBatch();
@@ -75,8 +78,9 @@ public class GameScreen implements Screen {
         bgm.startMusic();
 
         //Start spawning bad targets
-        spawnBadTargets();
-
+        //createBadTargetConfig();
+        spawner = new TargetSpawner(targets, batch);
+        new Thread(spawner).start();
     }
 
     public void show() {
@@ -131,7 +135,7 @@ public class GameScreen implements Screen {
 
         //Debug to create more bad targets
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            spawnBadTargets();
+            //createBadTargetConfig();
         }
 
         //Debug to change volume bgm
@@ -145,9 +149,23 @@ public class GameScreen implements Screen {
         batch.draw(waveTexture, 0, 0);
         batch.end();
 
-        //Redraw all bad targets
-        for (Target t: badTargets) {
-            t.redraw(batch, scrollRate);
+        //Add TargetSpawner threads generated targets to render threads targets
+        ArrayList<Target> bt = spawner.getTargets();
+        for (Target t: bt) {
+            targets.add(t);
+        }
+
+        spawner.clearTargets();
+
+        //Spawn and redraw all targets
+        for (Target t: targets) {
+            if (t.isSpawned()) {
+                //Target already spawned, just need to move it
+                t.redraw(batch, scrollRate + 1);
+            } else {
+                //Need to spawn target first
+                t.spawn(batch);
+            }
         }
 
         batch.begin();
@@ -159,16 +177,19 @@ public class GameScreen implements Screen {
 
 
         //Increase the background scroll of the image at increasingly higher scores
+        //Increase the rate of spawn of targets at increasingly higher scores
+        //Increase the difficulty of generated targets at increasingly higher scores
         if (scrollRate < maxScrollRate) {
             if (player.getCurrentTotalScore() > scoreIncreaseScrollValue) {
                 scoreIncreaseScrollValue = scoreIncreaseScrollValue * 2;
                 scrollRate++;
+                spawner.setSpawnRate(spawner.getSpawnRate() - 100);
+                spawner.increaseDifficulty();
             }
         }
 
         scrollMidground();
         checkBadTargetCollision();
-
     }
 
     public void resize(int width, int height) {
@@ -191,19 +212,35 @@ public class GameScreen implements Screen {
 
     }
 
-    private void spawnBadTargets() {
-        boolean[] config = generator.generateMediumConfig();
+    /*private void createBadTargetConfig() {
+        boolean[] config = new boolean[5];
+
+        switch(difficulty) {
+            case SINGLE:
+                config = generator.generateSingleConfig();
+                break;
+            case EASY:
+                config = generator.generateEasyConfig();
+                break;
+            case MEDIUM:
+                config = generator.generateMediumConfig();
+                break;
+            case HARD:
+                config = generator.generateHardConfig();
+                break;
+        }
+
         for (int i = 0; i < config.length; i++) {
             if (config[i] == true) {
                 Target target = new BadTarget();
-                badTargets.add(target);
+                targets.add(target);
                 target.spawn(batch, i);
             }
         }
-    }
+    }*/
 
     private void checkBadTargetCollision() {
-        for (Target t : badTargets) {
+        for (Target t : targets) {
             if (t.getX() == player.getX()) {
                 //In the same column
 
@@ -212,6 +249,12 @@ public class GameScreen implements Screen {
                 if (t.getY() == player.getY()) {
                     playerHitBad();
                 }
+
+                /*if (t.getY() + t.getHeight()/2 < player.getY() + player.getTexture().getHeight()/2) {
+                    if (t.getY() + t.getHeight()/2 < player.getY() - player.getTexture().getHeight()/2) {
+                        playerHitBad();
+                    }
+                }*/
             }
         }
 
