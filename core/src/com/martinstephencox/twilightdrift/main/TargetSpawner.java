@@ -7,6 +7,7 @@ import com.martinstephencox.twilightdrift.actors.TargetConfigGenerator;
 import com.martinstephencox.twilightdrift.consts.Consts;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Martin on 17/06/2016.
@@ -62,18 +63,34 @@ public class TargetSpawner implements Runnable {
             try {
                 boolean[] config = new boolean[Consts.NUM_TRACKS];
 
+                //Used to randomise the number of targets spawned at each difficulty level
+                Random rand = new Random();
+                int choice = rand.nextInt(100);
+
                 switch(difficulty) {
                     case SINGLE:
                         config = gen.generateSingleConfig();
                         break;
                     case EASY:
-                        config = gen.generateEasyConfig();
+                        if (choice < 25) {
+                            config = gen.generateSingleConfig();
+                        } else {
+                            config = gen.generateEasyConfig();
+                        }
                         break;
                     case MEDIUM:
-                        config = gen.generateMediumConfig();
+                        if (choice < 25) {
+                            config = gen.generateEasyConfig();
+                        } else {
+                            config = gen.generateMediumConfig();
+                        }
                         break;
                     case HARD:
-                        config = gen.generateHardConfig();
+                        if (choice < 25) {
+                            config = gen.generateMediumConfig();
+                        } else {
+                            config = gen.generateHardConfig();
+                        }
                         break;
                 }
 
@@ -85,7 +102,19 @@ public class TargetSpawner implements Runnable {
                     }
                 }
 
-                Thread.sleep(spawnRate);
+                int spawnRateChoice = rand.nextInt(100);
+                int modSpawnRate;
+
+                //Randomise the delay between each generated set of targets
+                if (spawnRateChoice > 50) {
+                    modSpawnRate = spawnRate;
+                } else if (spawnRateChoice > 25) {
+                    modSpawnRate = spawnRate + 100;
+                } else {
+                    modSpawnRate = spawnRate - 100;
+                }
+
+                Thread.sleep(modSpawnRate);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

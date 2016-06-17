@@ -182,7 +182,7 @@ public class GameScreen implements Screen {
         //Increase the difficulty of generated targets at increasingly higher scores
         if (scrollRate < maxScrollRate) {
             if (player.getCurrentTotalScore() > scoreIncreaseScrollValue) {
-                scoreIncreaseScrollValue = scoreIncreaseScrollValue * 2;
+                scoreIncreaseScrollValue = scoreIncreaseScrollValue * 3;
                 scrollRate++;
                 spawner.setSpawnRate(spawner.getSpawnRate() - 100);
                 spawner.increaseDifficulty();
