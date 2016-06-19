@@ -109,14 +109,10 @@ public class Player implements PlayerInterface {
     }
 
     /**
-     * Player hit a good target, increment the score multiplier and update the chunk score
+     * Player hit a good target, update the chunk score
      * @return int The updated chunk score
      */
-    /*public int updateChunkScore() {
-        if (currentMultiplier < Consts.MAX_SCORE_MULTIPLIER) {
-            currentMultiplier ++;
-        }
-
+    public int updateChunkScore() {
         if (currentChunkScore + Consts.GOOD_TARGET_VALUE > Consts.MAX_CHUNK_SCORE) {
             currentChunkScore = Consts.MAX_CHUNK_SCORE;
         } else {
@@ -124,7 +120,7 @@ public class Player implements PlayerInterface {
         }
 
         return currentChunkScore;
-    }*/
+    }
 
     /**
      * Adds the chunk score*multiplier to the total score (will be called when the user misses a good target or hits a bad target)

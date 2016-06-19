@@ -58,9 +58,14 @@ public class Consts {
     public static final int MAX_CHUNK_SCORE = 9999;
     public static final int MIN_SCORE_MULTIPLIER = 1;
     public static final int MAX_SCORE_MULTIPLIER = 99;
-    public static final int GOOD_TARGET_VALUE = 500;
+    public static final int GOOD_TARGET_VALUE = 100;
     public static final int UPDATE_SCORE_RATE = 20; //Update score 20 times a second
     public static final int PAUSE_VALUE = 2000; //Prevent score from increasing for 1.5 seconds after hitting a bad object
+
+    //The total score points needed to increase the difficulty. Each time the difficulty goes up the score needed to
+    //increase the difficulty is multiplied by 3 (so first difficulty spike is INCREASE_DIFFICULTY_VALUE, second is
+    //(3 * INCREASE_DIFFICULTY_VALUE), third is (3 * Second difficulty spike value) and so on
+    public static final int INCREASE_DIFFICULTY_VALUE = 10000;
 
     //Assets
     public static final String MUSIC_DIRECTORY = "music/";
@@ -76,6 +81,7 @@ public class Consts {
     public static final String IMAGE_SCROLLING_GAME_MIDGROUND = "images/game/game_mid_transparent.png";
     public static final String IMAGE_PLAYER = "images/game/player_transparent.png";
     public static final String IMAGE_BAD_TARGET = "images/game/bad_transparent.png";
+    public static final String IMAGE_GOOD_TARGET = "images/game/good_transparent.png";
 
     //Default Options
     public static final float MUSIC_VOLUME = 1.0f;

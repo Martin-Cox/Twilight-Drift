@@ -10,10 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.martinstephencox.twilightdrift.actors.BadTarget;
-import com.martinstephencox.twilightdrift.actors.Player;
-import com.martinstephencox.twilightdrift.actors.Target;
-import com.martinstephencox.twilightdrift.actors.TargetConfigGenerator;
+import com.martinstephencox.twilightdrift.actors.*;
 import com.martinstephencox.twilightdrift.audio.BackgroundMusicPlayer;
 import com.martinstephencox.twilightdrift.consts.Consts;
 import com.martinstephencox.twilightdrift.interfaces.PlayerInterface;
@@ -21,6 +18,8 @@ import com.martinstephencox.twilightdrift.main.ScoreThread;
 import com.martinstephencox.twilightdrift.main.TargetSpawner;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Martin on 05/06/2016.
@@ -37,7 +36,7 @@ public class GameScreen implements Screen {
     private int spawnRate = 1000; //1 second
     private int scrollRate = 1;
     private int maxScrollRate = 8;
-    private int scoreIncreaseScrollValue = 5000;
+    private int scoreIncreaseScrollValue = Consts.INCREASE_DIFFICULTY_VALUE;
 
     private enum difficultyRange {SINGLE, EASY, MEDIUM, HARD};
 
@@ -57,6 +56,8 @@ public class GameScreen implements Screen {
     private ArrayList<Target> targets = new ArrayList<>();
     private TargetConfigGenerator generator = new TargetConfigGenerator();
     private TargetSpawner spawner;
+
+    private boolean collisionTimedOut = false;
 
     public GameScreen() {
         batch = new SpriteBatch();
@@ -106,6 +107,10 @@ public class GameScreen implements Screen {
             player.updatePos(Consts.MOVEMENT.RECENTER);
         }
 
+        //TODO: REMOVE ALL THE DEBUG OPERATIONS
+
+        //  ---------- DEBUG OPERATIONS ----------
+
         //Debug to add chunk score to total and reset chunk score
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             cashSFX.play();
@@ -143,6 +148,8 @@ public class GameScreen implements Screen {
             bgm.setVolume(0.2f);
         }
 
+        //  ---------- END DEBUG OPERATIONS ----------
+
         batch.begin();
         batch.draw(midTextureFirst, 0, midTextureFirstY);
         batch.draw(midTextureSecond, 0, midTextureSecondY);
@@ -150,10 +157,7 @@ public class GameScreen implements Screen {
         batch.end();
 
         //Add TargetSpawner threads generated targets to render threads targets
-        ArrayList<Target> bt = spawner.getTargets();
-        for (Target t: bt) {
-            targets.add(t);
-        }
+        targets.addAll(spawner.getTargets());
 
         //Clear the TargetSpawner threads generated target list to prevent duplicate targets being spawned
         spawner.clearTargets();
@@ -217,26 +221,32 @@ public class GameScreen implements Screen {
      * Checks whether the player has collided with any targets
      */
     private void checkTargetCollision() {
-        for (Target t : targets) {
-            if (t.getX() == player.getX()) {
-                //In the same column
+        if (!collisionTimedOut) {
+            for (Target t : targets) {
+                if (t.getX() == player.getX()) {
+                    //In the same column
 
-                //TODO: This will only trigger if the player and the bad target are overlapping each other exactly.
-                //TODO: Implement bounding box collision detection only for the Y axis (badTarget overlapping player at any value of Y)
-                if (t.getY() == player.getY()) {
-                    if (t instanceof BadTarget) {
-                        playerHitBad();
+                    //TODO: This will only trigger if the player and the bad target are overlapping each other exactly.
+                    //TODO: Implement bounding box collision detection only for the Y axis (badTarget overlapping player at any value of Y)
+                    if (t.getY() == player.getY()) {
+                        if (t instanceof BadTarget) {
+                            playerHitBad();
+                            setCollisionTimedOut();
+                            break;
+                        } else if (t instanceof GoodTarget) {
+                            playerHitGood();
+                            break;
+                        }
                     }
+
+                    /*if (t.getY() + t.getHeight()/2 < player.getY() + player.getTexture().getHeight()/2) {
+                        if (t.getY() + t.getHeight()/2 < player.getY() - player.getTexture().getHeight()/2) {
+                            playerHitBad();
+                        }
+                    }*/
                 }
-
-                /*if (t.getY() + t.getHeight()/2 < player.getY() + player.getTexture().getHeight()/2) {
-                    if (t.getY() + t.getHeight()/2 < player.getY() - player.getTexture().getHeight()/2) {
-                        playerHitBad();
-                    }
-                }*/
             }
         }
-
     }
 
     /**
@@ -245,9 +255,26 @@ public class GameScreen implements Screen {
     private void playerHitBad() {
         player.resetChunkScore();
         player.resetMultiplier();
+        player.decrementLives();
         hitSFX.play();
         bgm.lowerVolumeOnHit();
         scoreThread.pauseScoreThread();
+    }
+
+    private void playerHitGood() {
+        player.incrementMultiplier();
+        player.updateChunkScore();
+    }
+
+    private void setCollisionTimedOut() {
+        collisionTimedOut = true;
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                collisionTimedOut = false;
+            }
+        }, Consts.PAUSE_VALUE);
     }
 
     /**

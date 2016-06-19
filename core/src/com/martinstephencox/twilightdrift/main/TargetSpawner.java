@@ -2,6 +2,7 @@ package com.martinstephencox.twilightdrift.main;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.martinstephencox.twilightdrift.actors.BadTarget;
+import com.martinstephencox.twilightdrift.actors.GoodTarget;
 import com.martinstephencox.twilightdrift.actors.Target;
 import com.martinstephencox.twilightdrift.actors.TargetConfigGenerator;
 import com.martinstephencox.twilightdrift.consts.Consts;
@@ -62,6 +63,7 @@ public class TargetSpawner implements Runnable {
         while(true) {
             try {
                 boolean[] config = new boolean[Consts.NUM_TRACKS];
+                boolean generatedGoodTarget = false;
 
                 //Used to randomise the number of targets spawned at each difficulty level
                 Random rand = new Random();
@@ -96,8 +98,18 @@ public class TargetSpawner implements Runnable {
 
                 for (int i = 0; i < config.length; i++) {
                     if (config[i] == true) {
-                        //TODO: Here add a 25% chance to create a single good target per configuration
+
                         Target target = new BadTarget(i);
+
+                        //25% chance to generate a good target instead
+                        if (!generatedGoodTarget) {
+                            choice = rand.nextInt(100);
+                            if (choice < 25) {
+                                target = new GoodTarget(i);
+                                generatedGoodTarget = true;
+                            }
+                        }
+
                         targets.add(target);
                     }
                 }

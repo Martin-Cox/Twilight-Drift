@@ -42,6 +42,8 @@ public interface PlayerInterface {
 
     void incrementMultiplier();
 
+    int updateChunkScore();
+
     int updateTotalScore();
 
     void resetLives();
