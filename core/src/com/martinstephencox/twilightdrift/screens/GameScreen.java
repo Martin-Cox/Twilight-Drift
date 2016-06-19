@@ -214,7 +214,13 @@ public class GameScreen implements Screen {
     }
 
     public void dispose() {
-
+        waveTexture.dispose();
+        midTextureFirst.dispose();
+        midTextureSecond.dispose();
+        cashSFX.dispose();
+        hitSFX.dispose();
+        bgm.dispose();
+        batch.dispose();
     }
 
     /**

@@ -131,4 +131,9 @@ public class BackgroundMusicPlayer {
             //Tried to set volume when no music has been loaded
         }
     }
+
+    public void dispose() {
+        track.dispose();
+    }
+
 }
