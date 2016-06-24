@@ -78,14 +78,6 @@ public class BadTarget implements Target {
 
     public int getHeight() { return texture.getHeight(); }
 
-    public void onHit() {
-
-    }
-
-    public void onMiss() {
-
-    }
-
     public boolean isSpawned() { return isSpawned; }
 
     public void setSpawned() { isSpawned = true; }

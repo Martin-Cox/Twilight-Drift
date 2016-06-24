@@ -13,10 +13,6 @@ public interface Target {
 
     void redraw(Batch batch, int scrollRate);
 
-    void onHit();
-
-    void onMiss();
-
     int getX();
 
     int getY();

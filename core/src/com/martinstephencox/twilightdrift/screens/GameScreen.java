@@ -238,9 +238,11 @@ public class GameScreen implements Screen {
                         if (t instanceof BadTarget) {
                             playerHitBad();
                             setCollisionTimedOut();
+                            targets.remove(t);
                             break;
                         } else if (t instanceof GoodTarget) {
                             playerHitGood();
+                            targets.remove(t);
                             break;
                         }
                     }
