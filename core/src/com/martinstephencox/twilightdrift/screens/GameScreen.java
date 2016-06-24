@@ -51,7 +51,8 @@ public class GameScreen implements Screen {
 
     private BackgroundMusicPlayer bgm = new BackgroundMusicPlayer();
     Sound cashSFX = Gdx.audio.newSound(Gdx.files.internal(Consts.SFX_CASH_POINTS));
-    Sound hitSFX = Gdx.audio.newSound(Gdx.files.internal(Consts.SFX_HIT_BAD));
+    Sound hitBadSFX = Gdx.audio.newSound(Gdx.files.internal(Consts.SFX_HIT_BAD));
+    Sound hitGoodSFX = Gdx.audio.newSound(Gdx.files.internal(Consts.SFX_CASH_POINTS));
 
     private ArrayList<Target> targets = new ArrayList<>();
     private TargetConfigGenerator generator = new TargetConfigGenerator();
@@ -218,7 +219,8 @@ public class GameScreen implements Screen {
         midTextureFirst.dispose();
         midTextureSecond.dispose();
         cashSFX.dispose();
-        hitSFX.dispose();
+        hitBadSFX.dispose();
+        hitGoodSFX.dispose();
         bgm.dispose();
         batch.dispose();
     }
@@ -264,7 +266,7 @@ public class GameScreen implements Screen {
         player.resetChunkScore();
         player.resetMultiplier();
         player.decrementLives();
-        hitSFX.play();
+        hitBadSFX.play();
         bgm.lowerVolumeOnHit();
         scoreThread.pauseScoreThread();
     }
@@ -272,6 +274,7 @@ public class GameScreen implements Screen {
     private void playerHitGood() {
         player.incrementMultiplier();
         player.updateChunkScore();
+        hitGoodSFX.play();
     }
 
     private void setCollisionTimedOut() {
