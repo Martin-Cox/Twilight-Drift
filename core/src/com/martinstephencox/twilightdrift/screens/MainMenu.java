@@ -58,7 +58,7 @@ public class MainMenu implements Screen {
     private float activeItemG = 13/255f;
     private float activeItemB = 97/255f;
 
-    private enum currentOptionValues {PLAY, HELP, EXIT};
+    private enum currentOptionValues {PLAY, HELP, EXIT}
 
     private currentOptionValues currentOption = currentOptionValues.PLAY;
 

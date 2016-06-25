@@ -44,6 +44,9 @@ public class GameScreen implements Screen {
 
     private SpriteBatch batch;
     private BitmapFont fontEstrogen;
+    private BitmapFont fontTotalScore;
+    private BitmapFont fontChunkScore;
+    private BitmapFont fontMultiplier;
 
     //Using the PlayerInterface to access Player class
     private PlayerInterface player = Player.getPlayer();
@@ -60,6 +63,14 @@ public class GameScreen implements Screen {
 
     private boolean collisionTimedOut = false;
 
+    private float scoreR = 0/255f;
+    private float scoreG = 151/255f;
+    private float scoreB = 157/255f;
+
+    private float multiplierR = 189/255f;
+    private float multiplierG = 13/255f;
+    private float multiplierB = 97/255f;
+
     public GameScreen() {
         batch = new SpriteBatch();
 
@@ -73,6 +84,48 @@ public class GameScreen implements Screen {
         parameter.kerning = true;
         fontEstrogen = generator.generateFont(parameter);
         generator.dispose();
+
+        //Load up total score font
+        FreeTypeFontGenerator totalScoreGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Consts.FONT_ESTROGEN));
+        FreeTypeFontGenerator.FreeTypeFontParameter totalScoreParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        totalScoreParameter.size = 56;
+        totalScoreParameter.color = new Color(scoreR, scoreG, scoreB, 1);
+        totalScoreParameter.borderWidth = 2;
+        totalScoreParameter.borderColor = Color.WHITE;
+        totalScoreParameter.shadowColor = Color.WHITE;
+        totalScoreParameter.shadowOffsetX = -4;
+        totalScoreParameter.shadowOffsetY = 4;
+        totalScoreParameter.kerning = true;
+        fontTotalScore = totalScoreGenerator.generateFont(totalScoreParameter);
+        totalScoreGenerator.dispose();
+
+        //Load up chunk score font
+        FreeTypeFontGenerator chunkScoreGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Consts.FONT_ESTROGEN));
+        FreeTypeFontGenerator.FreeTypeFontParameter chunkScoreParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        chunkScoreParameter.size = 36;
+        chunkScoreParameter.color = new Color(scoreR, scoreG, scoreB, 1);
+        chunkScoreParameter.borderWidth = 2;
+        chunkScoreParameter.borderColor = Color.WHITE;
+        chunkScoreParameter.shadowColor = Color.WHITE;
+        chunkScoreParameter.shadowOffsetX = -4;
+        chunkScoreParameter.shadowOffsetY = 4;
+        chunkScoreParameter.kerning = true;
+        fontChunkScore = chunkScoreGenerator.generateFont(chunkScoreParameter);
+        chunkScoreGenerator.dispose();
+
+        //Load up multiplier font
+        FreeTypeFontGenerator multiplierGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Consts.FONT_ESTROGEN));
+        FreeTypeFontGenerator.FreeTypeFontParameter multiplierParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        multiplierParameter.size = 36;
+        multiplierParameter.color = new Color(multiplierR, multiplierG, multiplierB, 1);
+        multiplierParameter.borderWidth = 2;
+        multiplierParameter.borderColor = Color.WHITE;
+        multiplierParameter.shadowColor = Color.WHITE;
+        multiplierParameter.shadowOffsetX = -4;
+        multiplierParameter.shadowOffsetY = 4;
+        multiplierParameter.kerning = true;
+        fontMultiplier = multiplierGenerator.generateFont(multiplierParameter);
+        multiplierGenerator.dispose();
 
         //Start updating chunk score
         player.startChunkScore(scoreThread);
@@ -108,11 +161,7 @@ public class GameScreen implements Screen {
             player.updatePos(Consts.MOVEMENT.RECENTER);
         }
 
-        //TODO: REMOVE ALL THE DEBUG OPERATIONS
-
-        //  ---------- DEBUG OPERATIONS ----------
-
-        //Debug to add chunk score to total and reset chunk score
+        //Cash in current score
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             cashSFX.play();
             player.updateTotalScore();
@@ -120,36 +169,14 @@ public class GameScreen implements Screen {
             player.resetMultiplier();
         }
 
-        //Debug to add multiplier
-        if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
-            player.incrementMultiplier();
-        }
-
-        //Debug to pause chunk score and reset
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
-            playerHitBad();
-        }
-
         //Debug to pause bgm
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        /*if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             if (bgm.isPlaying()) {
                 bgm.pause();
             } else {
                 bgm.resume();
             }
-        }
-
-        //Debug to create more bad targets
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            //createBadTargetConfig();
-        }
-
-        //Debug to change volume bgm
-        if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
-            bgm.setVolume(0.2f);
-        }
-
-        //  ---------- END DEBUG OPERATIONS ----------
+        }*/
 
         batch.begin();
         batch.draw(midTextureFirst, 0, midTextureFirstY);
@@ -176,9 +203,9 @@ public class GameScreen implements Screen {
 
         batch.begin();
         batch.draw(player.getTexture(), player.getAdjustedX(), player.getY());
-        fontEstrogen.draw(batch, "Total Score: " + player.getCurrentTotalScore(), 10, 450);
-        fontEstrogen.draw(batch, "Chunk Score: " + player.getCurrentChunkScore(), 10, 400);
-        fontEstrogen.draw(batch, "Multiplier: " + player.getCurrentMultiplier(), 10, 350);
+        fontTotalScore.draw(batch, getFormattedTotalScore(), 210, 575);
+        fontChunkScore.draw(batch, getFormattedChunkScore(), 310, 510);
+        fontMultiplier.draw(batch, getFormattedMultiplier(), 420, 510);
         batch.end();
 
 
@@ -271,12 +298,18 @@ public class GameScreen implements Screen {
         scoreThread.pauseScoreThread();
     }
 
+    /**
+     * Player hit a good target, process all game logic for hitting a good target
+     */
     private void playerHitGood() {
         player.incrementMultiplier();
         player.updateChunkScore();
         hitGoodSFX.play();
     }
 
+    /**
+     * Set a collision flag to false for Consts.PAUSE_VALUE ms
+     */
     private void setCollisionTimedOut() {
         collisionTimedOut = true;
         Timer timer = new Timer();
@@ -289,9 +322,45 @@ public class GameScreen implements Screen {
     }
 
     /**
+     * Prepends the players total score with zeros
+     * @return A formatted string containing the total score
+     */
+    private String getFormattedTotalScore(){
+        String score = "" + player.getCurrentTotalScore();
+
+        String formattedScore = ("0000000000" + score).substring(score.length());
+
+        return formattedScore;
+    }
+
+    /**
+     * Prepends the players chunk score with zeros
+     * @return A formatted string containing the chunk score
+     */
+    private String getFormattedChunkScore(){
+        String score = "" + player.getCurrentChunkScore();
+
+        String formattedScore = ("0000" + score).substring(score.length());
+
+        return formattedScore;
+    }
+
+    /**
+     * Prepends the players multiplier with zeros
+     * @return A formatted string containing the multiplier
+     */
+    private String getFormattedMultiplier(){
+        String mult = "" + player.getCurrentMultiplier();
+
+        String formattedScore = "x " + ("00" + mult).substring(mult.length());
+
+        return formattedScore;
+    }
+
+    /**
      * Move textures down at scrollRate pixels per frame
      */
-    public void scrollMidground() {
+    private void scrollMidground() {
         midTextureFirstY -= scrollRate;
         midTextureSecondY -= scrollRate;
 
