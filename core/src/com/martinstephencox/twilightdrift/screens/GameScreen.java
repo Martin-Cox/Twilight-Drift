@@ -1,5 +1,6 @@
 package com.martinstephencox.twilightdrift.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -146,6 +147,12 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        if (player.getLives() <= 0 ) {
+            GameOverScreen gameOverScreen = new GameOverScreen();
+            ((Game) Gdx.app.getApplicationListener()).setScreen(gameOverScreen);
+            this.dispose();
+        }
+
         //Move left
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A)) {
             player.updatePos(Consts.MOVEMENT.LEFT);
@@ -210,6 +217,7 @@ public class GameScreen implements Screen {
         fontTotalScore.draw(batch, getFormattedTotalScore(), 210, 575);
         fontChunkScore.draw(batch, getFormattedChunkScore(), 310, 510);
         fontMultiplier.draw(batch, getFormattedMultiplier(), 420, 510);
+        fontMultiplier.draw(batch, "Lives left: " + player.getLives(), 10, 50);
         batch.end();
 
 
@@ -253,7 +261,7 @@ public class GameScreen implements Screen {
         hitBadSFX.dispose();
         hitGoodSFX.dispose();
         bgm.dispose();
-        batch.dispose();
+        //batch.dispose();
     }
 
     /**

@@ -53,9 +53,6 @@ public class BackgroundMusicPlayer {
             track = Gdx.audio.newMusic(Gdx.files.internal(song.getFilename()));
             track.setVolume(volume);
             track.play();
-
-            System.out.println("Artist: " + song.getArtist());
-            System.out.println("Track: " + song.getTrackName());
         } catch (Exception e) {
             System.out.println("Something is wrong with the music files. Check to see if they are in the directory and that the song definitions specified in SongList.java are consistent");
         }
