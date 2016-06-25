@@ -256,14 +256,22 @@ public class GameScreen implements Screen {
      * Checks whether the player has collided with any targets
      */
     private void checkTargetCollision() {
+
+        int playerMaxY = player.getY() + player.getTexture().getHeight()/2 - 10; //The uppermost pixel of the player sprite (-10 pixels to allow for a slight overlap)
+        int playerMinY = player.getY() - player.getTexture().getHeight()/2; //The lowermost pixel of the player sprite
+
+        boolean isColliding = false;
+
         if (!collisionTimedOut) {
             for (Target t : targets) {
                 if (t.getX() == player.getX()) {
                     //In the same column
 
-                    //TODO: This will only trigger if the player and the bad target are overlapping each other exactly.
-                    //TODO: Implement bounding box collision detection only for the Y axis (badTarget overlapping player at any value of Y)
-                    if (t.getY() == player.getY()) {
+                    int targetMaxY = t.getY() + t.getHeight()/2; //The uppermost pixel of the player sprite
+                    int targetMinY = t.getY() - t.getHeight()/2; //The lowermost pixel of the player sprite
+
+                    //If the bottom of the target is lower than the top of the player and the top of the target is above the bottom of the player
+                    if ((targetMinY <= playerMaxY) && targetMaxY > playerMinY) {
                         if (t instanceof BadTarget) {
                             playerHitBad();
                             setCollisionTimedOut();
@@ -275,12 +283,6 @@ public class GameScreen implements Screen {
                             break;
                         }
                     }
-
-                    /*if (t.getY() + t.getHeight()/2 < player.getY() + player.getTexture().getHeight()/2) {
-                        if (t.getY() + t.getHeight()/2 < player.getY() - player.getTexture().getHeight()/2) {
-                            playerHitBad();
-                        }
-                    }*/
                 }
             }
         }
