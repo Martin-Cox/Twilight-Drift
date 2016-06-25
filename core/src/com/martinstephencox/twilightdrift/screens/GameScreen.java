@@ -143,7 +143,7 @@ public class GameScreen implements Screen {
     }
 
     public void render(float delta) {
-        Gdx.gl.glClearColor(127/255f, 168/255f, 1, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //Move left
@@ -191,14 +191,18 @@ public class GameScreen implements Screen {
         spawner.clearTargets();
 
         //Spawn and redraw all targets
-        for (Target t: targets) {
-            if (t.isSpawned()) {
-                //Target already spawned, just need to move it
-                t.redraw(batch, scrollRate + 1);
-            } else {
-                //Need to spawn target first
-                t.spawn(batch);
+        try {
+            for (Target t : targets) {
+                if (t.isSpawned()) {
+                    //Target already spawned, just need to move it
+                    t.redraw(batch, scrollRate + 1);
+                } else {
+                    //Need to spawn target first
+                    t.spawn(batch);
+                }
             }
+        } catch (NullPointerException e) {
+
         }
 
         batch.begin();

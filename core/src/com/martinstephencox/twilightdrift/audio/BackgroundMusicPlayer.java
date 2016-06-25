@@ -19,6 +19,8 @@ public class BackgroundMusicPlayer {
 
     private float volume = Consts.MUSIC_VOLUME;
     private Music track;
+    private Song song;
+    private SongList songlist = new SongList();
     private int currentTrackNum = -1;
 
     public BackgroundMusicPlayer() {}
@@ -43,43 +45,29 @@ public class BackgroundMusicPlayer {
      * Start playing background music on loop
      */
     public void startMusic() {
-        int numberOfFilesInDirectory = 0;
-        int trackNumber;
 
-        //Get number of song files in the music directory
+        song = songlist.getRandomSong();
+
+        //Load the track and play
         try {
-            numberOfFilesInDirectory = toIntExact(Files.list(Paths.get(Consts.MUSIC_DIRECTORY)).count());
-        } catch (IOException e) {
-
-        }
-
-        if (numberOfFilesInDirectory > 1) {
-
-            //Pick a random song from the directory
-            Random rand = new Random();
-            while (true) {
-                trackNumber = rand.nextInt(numberOfFilesInDirectory);
-                //Prevent same song playing twice in a row
-                if (trackNumber != currentTrackNum) {
-                    currentTrackNum = trackNumber;
-                    break;
-                }
-            }
-
-            //Load the track and play
-            track = Gdx.audio.newMusic(Gdx.files.internal(Consts.MUSIC_DIRECTORY + "/" + trackNumber + ".mp3"));
+            track = Gdx.audio.newMusic(Gdx.files.internal(song.getFilename()));
             track.setVolume(volume);
             track.play();
 
-            track.setOnCompletionListener(new Music.OnCompletionListener() {
-                @Override
-                public void onCompletion(Music music) {
-                    //On music completion, dispose of old music files from memory and start playing a new track
-                    track.dispose();
-                    startMusic();
-                }
-            });
+            System.out.println("Artist: " + song.getArtist());
+            System.out.println("Track: " + song.getTrackName());
+        } catch (Exception e) {
+            System.out.println("Something is wrong with the music files. Check to see if they are in the directory and that the song definitions specified in SongList.java are consistent");
         }
+
+        track.setOnCompletionListener(new Music.OnCompletionListener() {
+            @Override
+            public void onCompletion(Music music) {
+                //On music completion, dispose of old music files from memory and start playing a new track
+                track.dispose();
+                startMusic();
+            }
+        });
     }
 
     /**

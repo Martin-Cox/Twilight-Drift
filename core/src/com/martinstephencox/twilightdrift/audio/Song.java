@@ -11,12 +11,13 @@ public class Song {
     private String artist;
     private String trackName;
     private String filename;
+    boolean hasBeenPlayed = false;
 
     public Song(int trackNumber, String artist, String trackName) {
         this.trackNumber = trackNumber;
         this.artist = artist;
         this.trackName = trackName;
-        filename = Consts.MUSIC_DIRECTORY + "/" + trackNumber + ".mp3";
+        filename = Consts.MUSIC_DIRECTORY + trackNumber + ".mp3";
     }
 
     public String getFilename() { return filename; }
@@ -24,5 +25,11 @@ public class Song {
     public String getArtist() { return artist; }
 
     public String getTrackName() { return trackName; }
+
+    public boolean hasBeenPlayed () { return hasBeenPlayed; }
+
+    public void setHasBeenPlayed() { hasBeenPlayed = true; }
+
+    public void resetHasBeenPlayed() { hasBeenPlayed = false; }
 
 }
