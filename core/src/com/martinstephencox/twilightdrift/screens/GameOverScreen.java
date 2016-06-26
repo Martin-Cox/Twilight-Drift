@@ -99,9 +99,9 @@ public class GameOverScreen implements Screen {
         batch.draw(scrollingFgTextureDecorated, scrollingFgTextureDecoratedX, 0);
 
         //All text
-        fontEstrogenTitle.draw(batch, "Game Over", 250, 450);
-        fontEstrogenScore.draw(batch, "Score: " + getFormattedTotalScore(), 200, 350);
-        fontEstrogenMenu.draw(batch, "Press any key to return to the menu", 50, 200);
+        fontEstrogenTitle.draw(batch, "Game Over", 180, 450);
+        fontEstrogenScore.draw(batch, "Score: " + getFormattedTotalScore(), 170, 350);
+        fontEstrogenMenu.draw(batch, "Press any key", 230, 200);
 
         batch.end();
 
@@ -142,9 +142,7 @@ public class GameOverScreen implements Screen {
     private String getFormattedTotalScore(){
         String score = "" + player.getCurrentTotalScore();
 
-        String formattedScore = ("0000000000" + score).substring(score.length());
-
-        return formattedScore;
+        return "" + ("0000000000" + score).substring(score.length());
     }
 
     /**
