@@ -38,9 +38,6 @@ public class GameOverScreen implements Screen {
     private int scrollingMgTextureFirstX = 0;
     private int scrollingMgTextureSecondX = Consts.MENU_MIDGROUND_WIDTH;        //Needs to be directly to the right of the first MgTexture
 
-    //The help dialog box texture
-    private Texture helpDialogTexture = new Texture(Gdx.files.internal(Consts.IMAGE_HELP_DIALOG));
-
     private SpriteBatch batch;
     private BitmapFont fontEstrogenTitle;
     private BitmapFont fontEstrogenScore;
@@ -83,6 +80,7 @@ public class GameOverScreen implements Screen {
         scoreParameter.shadowOffsetY = 4;
         scoreParameter.kerning = true;
         fontEstrogenScore = scoreGenerator.generateFont(scoreParameter);
+        fontEstrogenMenu = scoreGenerator.generateFont(scoreParameter);
         scoreGenerator.dispose();
     }
 
@@ -103,6 +101,7 @@ public class GameOverScreen implements Screen {
         //All text
         fontEstrogenTitle.draw(batch, "Game Over", 250, 450);
         fontEstrogenScore.draw(batch, "Score: " + getFormattedTotalScore(), 200, 350);
+        fontEstrogenMenu.draw(batch, "Press any key to return to the menu", 50, 200);
 
         batch.end();
 
@@ -197,6 +196,9 @@ public class GameOverScreen implements Screen {
         scrollingMgTextureSecond.dispose();
         scrollingFgTextureSimple.dispose();
         scrollingFgTextureDecorated.dispose();
+        fontEstrogenTitle.dispose();
+        fontEstrogenScore.dispose();
+        fontEstrogenMenu.dispose();
         batch.dispose();
     }
 }

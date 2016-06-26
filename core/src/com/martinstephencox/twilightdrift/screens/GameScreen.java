@@ -44,7 +44,6 @@ public class GameScreen implements Screen {
     private difficultyRange difficulty = difficultyRange.SINGLE;
 
     private SpriteBatch batch;
-    private BitmapFont fontEstrogen;
     private BitmapFont fontTotalScore;
     private BitmapFont fontChunkScore;
     private BitmapFont fontMultiplier;
@@ -74,17 +73,6 @@ public class GameScreen implements Screen {
 
     public GameScreen() {
         batch = new SpriteBatch();
-
-        //Load up nice font
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Consts.FONT_ESTROGEN));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 36;
-        parameter.color = Color.BLUE;
-        parameter.borderWidth = 1;
-        parameter.borderColor = Color.WHITE;
-        parameter.kerning = true;
-        fontEstrogen = generator.generateFont(parameter);
-        generator.dispose();
 
         //Load up total score font
         FreeTypeFontGenerator totalScoreGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Consts.FONT_ESTROGEN));
@@ -146,12 +134,6 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        if (player.getLives() <= 0 ) {
-            GameOverScreen gameOverScreen = new GameOverScreen();
-            ((Game) Gdx.app.getApplicationListener()).setScreen(gameOverScreen);
-            this.dispose();
-        }
 
         //Move left
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A)) {
@@ -235,6 +217,13 @@ public class GameScreen implements Screen {
 
         scrollMidground();
         checkTargetCollision();
+
+        //Has player run out of lives, if so move to game over screen
+        if (player.getLives() <= 0 ) {
+            GameOverScreen gameOverScreen = new GameOverScreen();
+            ((Game) Gdx.app.getApplicationListener()).setScreen(gameOverScreen);
+            this.dispose();
+        }
     }
 
     public void resize(int width, int height) {
@@ -257,11 +246,14 @@ public class GameScreen implements Screen {
         waveTexture.dispose();
         midTextureFirst.dispose();
         midTextureSecond.dispose();
+        fontTotalScore.dispose();
+        fontChunkScore.dispose();
+        fontMultiplier.dispose();
         cashSFX.dispose();
         hitBadSFX.dispose();
         hitGoodSFX.dispose();
         bgm.dispose();
-        //batch.dispose();
+        batch.dispose();
     }
 
     /**
@@ -354,9 +346,7 @@ public class GameScreen implements Screen {
     private String getFormattedChunkScore(){
         String score = "" + player.getCurrentChunkScore();
 
-        String formattedScore = ("0000" + score).substring(score.length());
-
-        return formattedScore;
+        return "" + ("0000" + score).substring(score.length());
     }
 
     /**
@@ -366,9 +356,7 @@ public class GameScreen implements Screen {
     private String getFormattedMultiplier(){
         String mult = "" + player.getCurrentMultiplier();
 
-        String formattedScore = "x " + ("00" + mult).substring(mult.length());
-
-        return formattedScore;
+        return "x " + ("00" + mult).substring(mult.length());
     }
 
     /**

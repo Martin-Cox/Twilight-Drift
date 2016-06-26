@@ -34,9 +34,6 @@ public class MainMenu implements Screen {
     private int scrollingMgTextureFirstX = 0;
     private int scrollingMgTextureSecondX = Consts.MENU_MIDGROUND_WIDTH;        //Needs to be directly to the right of the first MgTexture
 
-    //The help dialog box texture
-    private Texture helpDialogTexture = new Texture(Gdx.files.internal(Consts.IMAGE_HELP_DIALOG));
-
     private SpriteBatch batch;
     private BitmapFont fontEstrogenTitle;
     private BitmapFont fontEstrogenMenuPlay;
@@ -276,10 +273,18 @@ public class MainMenu implements Screen {
     }
 
     public void dispose() {
+        staticBgTexture.dispose();
         scrollingMgTextureFirst.dispose();
         scrollingMgTextureSecond.dispose();
         scrollingFgTextureSimple.dispose();
         scrollingFgTextureDecorated.dispose();
+        fontEstrogenTitle.dispose();
+        fontEstrogenMenuPlay.dispose();
+        fontEstrogenMenuHelp.dispose();
+        fontEstrogenMenuExit.dispose();
+        fontEstrogenMenuPlayActive.dispose();
+        fontEstrogenMenuHelpActive.dispose();
+        fontEstrogenMenuExitActive.dispose();
         batch.dispose();
     }
 }
