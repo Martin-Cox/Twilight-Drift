@@ -172,7 +172,7 @@ public class MainMenu implements Screen {
         //--------- Handle input ---------
 
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             if (!showHelp) {
                 if (currentOption == currentOptionValues.PLAY) {
                     currentOption = currentOptionValues.HELP;
@@ -182,7 +182,7 @@ public class MainMenu implements Screen {
             }
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)) {
             if (!showHelp) {
                 if (currentOption == currentOptionValues.HELP) {
                     currentOption = currentOptionValues.PLAY;
@@ -192,7 +192,7 @@ public class MainMenu implements Screen {
             }
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             if (showHelp == false) {
                 switch (currentOption) {
                     case PLAY:
