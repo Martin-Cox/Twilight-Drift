@@ -261,7 +261,7 @@ public class GameScreen implements Screen {
      */
     private void checkTargetCollision() {
 
-        int playerMaxY = player.getY() + player.getTexture().getHeight()/2 - 10; //The uppermost pixel of the player sprite (-10 pixels to allow for a slight overlap)
+        int playerMaxY = player.getY() + player.getTexture().getHeight()/2 - 30; //The uppermost pixel of the player sprite (-30 pixels to allow for transparent border spacing)
         int playerMinY = player.getY() - player.getTexture().getHeight()/2; //The lowermost pixel of the player sprite
 
         boolean isColliding = false;
